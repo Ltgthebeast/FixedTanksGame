@@ -41,7 +41,7 @@ public class Mouse implements MouseListener, MouseMotionListener{
                 double x =26*Math.cos(angle),
                         y = 97*Math.sin(angle);
                 
-                Bullet bullet = new Bullet(MainGame.player.getX(), MainGame.player.getY(), 9, 40, ID.Bullet, "", MainGame.player.canAngle);
+                Bullet bullet = new Bullet(MainGame.player.getX(), MainGame.player.getY(), 6, 30, ID.Bullet, "", MainGame.player.canAngle);
                 
                 MainGame.handler.add(bullet);
                 // need to get speed based off angle

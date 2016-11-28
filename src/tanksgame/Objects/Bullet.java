@@ -26,18 +26,24 @@ public class Bullet extends GameObject{
     public void render(Graphics2D g) {
       
         g.rotate(angle, x, y);
+        
 //        g.setColor(Color.BLACK);
 //        g.drawLine((int)x,(int) y,(int)x+MainGame.player.can.getWidth(),(int) y+MainGame.player.can.getHeight());
-        g.drawImage(MainGame.funct.getImageFromName("bullet.png"), (int) x, (int) y, null);
+        g.drawImage(MainGame.funct.getScaledImage(MainGame.funct.getImageFromName("bullet.png"), (int)(this.getWidth()*.75), (int)(this.getHeight()*.75)), (int) x, (int) y, null);
         g.rotate(-angle, x, y);
+//        MainGame.funct.drawBounds(g, this);
     }
 
     @Override
     public void tick() {
         x += velX;
         y += -velY;
-        if(collision(MainGame.bottom) || collision(MainGame.top) || collision(MainGame.left) || collision(MainGame.right)){
-            MainGame.handler.remove(this);
+        for(int i = 0; i < MainGame.handler.objs.size(); i++){
+            if(MainGame.handler.objs.get(i).getID() == ID.Wall){
+                if(collision(MainGame.handler.objs.get(i))){
+                    MainGame.handler.remove(this);
+                }
+            }
         }
     }
 
@@ -49,7 +55,15 @@ public class Bullet extends GameObject{
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle ((int)x,(int) y, (int)width, (int)height);
+        Rectangle bounds = new Rectangle ((int)(x-width),(int) (y-10), (int)width, (int)10);
+//        int x = (int) (Math.sin(Math.toRadians(MainGame.player.canAngle))*Math.sqrt(Math.pow(this.getWidth(), 2) + Math.pow(this.getWidth(), 2))),
+//                y = (int) (Math.cos(Math.toRadians(MainGame.player.canAngle))*Math.sqrt(Math.pow(this.getHeight(), 2) + Math.pow(this.getHeight(), 2)));
+        /*
+         sin x = o/h
+         cos x = a/h
+        */
+        
+        return bounds;
     }
     
     

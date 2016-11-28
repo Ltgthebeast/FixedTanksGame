@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.LinkedList;
 import tanksgame.Engine.MainGame;
+import java.util.LinkedList;
 
 /**
  *
@@ -27,6 +28,12 @@ public class Map extends GameObject{
         walls.add(new VisibleWall(x, y, width, height, ID.Wall, direction));
     }
     
+    public void addWalls(LinkedList<VisibleWall> walls){
+        for(VisibleWall wall: walls){
+            this.walls.add(wall);
+        }
+    }
+    
     public void addWall(VisibleWall e){
         walls.add(e);
     }
@@ -43,6 +50,10 @@ public class Map extends GameObject{
         }
     }
     
+    public void renderWalls(){
+        render = true;
+    }
+    
     @Override
     public void render(Graphics2D g) {
        // display graphics for map
@@ -51,6 +62,14 @@ public class Map extends GameObject{
             walls.get(i).render(g);
         }
        
+       if(render){
+           if(!rendered){
+               for(int i = 0; i < walls.size(); i++){
+                   walls.get(i).render(g);
+               }
+           }
+           rendered = true;
+       }
     }
 
     @Override

@@ -18,6 +18,7 @@ import java.awt.Point;
 import javax.swing.SwingUtilities;
 import tanksgame.Input.Keyboard;
 import tanksgame.Input.Mouse;
+import tanksgame.Maps.Maps;
 import tanksgame.Objects.Button;
 import tanksgame.Objects.ID;
 import tanksgame.Objects.InvisibleWall;
@@ -30,6 +31,11 @@ import tanksgame.Screens.ControlScreen;
  *
  * @author Luke T Garceau
  */
+/*
+
+redraw area over where the tank is every time it is updated instead of redrawing the backgroud everytime
+
+*/
 public class MainGame extends Canvas implements Runnable{
     
     // vairables
@@ -37,7 +43,8 @@ public class MainGame extends Canvas implements Runnable{
     public static final String TITLE = "Tanks";
     private Thread thread;
     public boolean running = false,
-            first = true;
+            first = true,
+            firstDraw = false;
     public static boolean updatePlayer = false;
     
     // Map variables what map they are on
@@ -52,6 +59,7 @@ public class MainGame extends Canvas implements Runnable{
     public static UseFulFunctions funct = new UseFulFunctions();
     public Frame frame;
     public static ControlScreen controlScreen = null;
+    public Maps maps = new Maps();
     
     // Buttons
     public static Button start = new Button(10, 100, 300, 50, ID.Button, null, Color.blue, "Start"),
@@ -59,7 +67,7 @@ public class MainGame extends Canvas implements Runnable{
             play = new Button(10, 300, 250, 50, ID.Bullet, null, Color.red, "Play!");
     
     // GameObjects
-    public static Player player = new Player(WIDTH/2, HEIGHT/2, 90, 142, ID.Tank, "");
+    public static Player player = new Player(WIDTH/2, HEIGHT/2,77, 100, ID.Tank, "");
     
     // Invisible Walls
     public static InvisibleWall top = new InvisibleWall(0, 0, WIDTH, 10, ID.Wall, "top"),
@@ -69,35 +77,25 @@ public class MainGame extends Canvas implements Runnable{
     
     // Maps
         // Visible Walls In Maps
-    public static Map map1 = new Map(0, 0, 0, 0, ID.Map, "map1");
-        
-        
-    
+    public static Map map = new Map(0, 0, 0, 0, ID.Map, "");
     
     public MainGame(){
         frame = new Frame(WIDTH, HEIGHT, TITLE, this);
         this.handler = new Handler();
         addMouseListener(new Mouse());
         addKeyListener(new Keyboard(handler));
-        
-        
-        
         // add Start Button
         handler.add(start);
         handler.add(exit);
         
-        // add Invisible Walls
-//        handler.add(top);
-//        handler.add(bottom);
-//        handler.add(left);
-//        handler.add(right);
+        handler.add(top);
+        handler.add(bottom);
+        handler.add(left);
+        handler.add(right);
         
-        // add visible walls to map1
-        map1.addWall(0, 0, (int)WIDTH, 20, "top");
-        map1.addWall(0, 0, 20, (int)HEIGHT, "left");
-        map1.addWall((int)WIDTH-20, 0, 20, (int) HEIGHT, "right");
-        map1.addWall(0, (int) HEIGHT-40, (int)WIDTH, 20, "bottom");
-        
+        // add visible walls to maps 
+//        map1.addWall(wall1);
+        map.addWalls(maps.getMap(1));
     }
     
     
@@ -184,8 +182,8 @@ public class MainGame extends Canvas implements Runnable{
         Graphics2D g = (Graphics2D) bs.getDrawGraphics();
         
         
-        g.setColor(new Color(210,180,140)); // beige
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+            g.setColor(new Color(210,180,140)); // beige
+            g.fillRect(0, 0, WIDTH, HEIGHT);
         
         if(ControlScreen.startScreen){
             g.drawImage(funct.getImageFromName("background.png"), WIDTH/5, HEIGHT/8, null);
@@ -209,15 +207,23 @@ public class MainGame extends Canvas implements Runnable{
             updatePlayer = false;
              // render map based on map count
             if(mapCount == 1){
+                // set the spawn
+                player.setX(61);
+                player.setY(66);
+                // goes to next map
                 mapCount++;
-                map1.addWallsToHandler();
-                handler.add(map1);
+                // drawing map shit
+                map.addWallsToHandler();
+                handler.add(map);
             }
             
+            map.renderWalls();
+//            player.drawArrow(g);
         }
                
         // render all gameobjects
         handler.render(g);
+        
         g.dispose();
         bs.show();
         

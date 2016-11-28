@@ -5,12 +5,22 @@
  */
 package tanksgame.Engine;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.awt.image.IndexColorModel;
+import java.awt.image.RGBImageFilter;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import tanksgame.Objects.GameObject;
@@ -42,11 +52,17 @@ public class UseFulFunctions {
         Graphics2D g = dimg.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.drawImage(img, 0, 0, w, h, 0, 0, Ow, Oh, null);
-        g.dispose();  
-
+        g.drawImage(dimg, 0, 0, w, h, 0, 0, Ow, Oh, null, null);
+        g.dispose();
+        
+        Image tmp = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        dimg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        g = dimg.createGraphics();
+        g.drawImage(tmp, 0, 0, null);
+        g.dispose();
+        
         return dimg;
-    }
+   }
     
     public double map(double input, double oldMin, double oldMax, double newMin, double newMax){
         return (input - oldMin) * (newMax - newMin) / (oldMax - oldMin) + newMin;

@@ -51,13 +51,6 @@ public class VisibleWall extends GameObject{
         for(int i = 0; i < amtHeight; i++){
             g.drawImage(scaled, (int)x, (int) y+(i*scaled.getHeight()), null);
         }
-        
-        drawBounds(g);
-        
-        
-//        g.drawImage(scaled, (int)x, (int)y, null);
-//        System.out.println(scaled.getHeight()+"|"+scaled.getWidth());
-        
     }
 
     @Override
