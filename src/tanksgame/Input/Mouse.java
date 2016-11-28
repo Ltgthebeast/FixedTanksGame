@@ -21,7 +21,7 @@ import tanksgame.Screens.ControlScreen;
  * @author LGarceau
  */
 public class Mouse implements MouseListener, MouseMotionListener{
-    
+    public int timeout = 100;
     @Override
     public void mouseClicked(MouseEvent e) {
        
@@ -29,29 +29,33 @@ public class Mouse implements MouseListener, MouseMotionListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
+       
        MainGame.mouseButton = e.getButton();
        if(e.getButton() == 1){
        // left mouse means fire bullet
        double angle = Math.toDegrees(MainGame.player.canAngle);
+            
             if(ControlScreen.gameScreen){
                 if(angle < 0){
                     angle+=360;
                 }
-//                System.out.println("bullet angle|"+angle);
-                double x =26*Math.cos(angle),
-                        y = 97*Math.sin(angle);
-                
-                Bullet bullet = new Bullet(MainGame.player.getX(), MainGame.player.getY(), 6, 30, ID.Bullet, "", MainGame.player.canAngle);
-                
-                MainGame.handler.add(bullet);
-                // need to get speed based off angle
-                double velY = Math.cos(MainGame.player.canAngle) * 5,
-                        velX = Math.sin(MainGame.player.canAngle) * 5;
-                bullet.setVelX(velX);
-                bullet.setVelY(velY);
+                makeBullet(angle);
             }
        }
        // 1 is left, 2 is middle, 3 is right
+    }
+    
+    public void makeBullet(double angle){
+         double x =26*Math.cos(angle),
+                y = 97*Math.sin(angle);
+        Bullet bullet = new Bullet(MainGame.player.getX(), MainGame.player.getY(), 6, 30, ID.Bullet, "", MainGame.player.canAngle);
+
+        MainGame.handler.add(bullet);
+        // need to get speed based off angle
+        double velY = Math.cos(MainGame.player.canAngle) * 5,
+                velX = Math.sin(MainGame.player.canAngle) * 5;
+        bullet.setVelX(velX);
+        bullet.setVelY(velY);
     }
 
     @Override
